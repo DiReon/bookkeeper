@@ -1,0 +1,34 @@
+{% extends 'bookkeeper/base.html' %}
+{% block content %}
+
+<h1>Расходы по категориям за {{month_j}} {{year}} :</h1>
+
+{% for key, value in totals.items %}
+<div class="category">
+    <div class="category-name"><a class ="category-link" href="/{{ year}}/{{ month }}/{{ key }}">{{key}}:</a></div>
+    <div class="category-total">{{value}}</div>
+</div>
+{% endfor %}
+
+<div class="pagination pull-left">
+    <ul>
+        {% if previous_month %}
+            <li class="prev">
+                <a href="/{{ previous_month|date:'Y'  }}/{{ previous_month|date:'m' }}">
+                    &larr; {{ previous_month|date:"F Y" }}
+                </a>
+            </li>
+        {% endif %}
+        {% if next_month %}
+            <li class="next">
+                <a href="/{{ next_month|date:'Y'  }}/{{ next_month|date:'m' }}">
+                    {{ next_month|date:"F Y" }} &rarr;</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+
+
+{% endblock %}
+
+

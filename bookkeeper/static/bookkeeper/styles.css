@@ -1,0 +1,56 @@
+body {
+    margin: 20px;
+}
+
+h1, h2, h3 {
+    font-family: Lobster;
+}
+.expense {
+    
+    padding: 5px;
+    background: rgb(235, 233, 233);
+    border: 2px solid white;
+    border-radius: 10px;
+}
+.category {
+    font-size: 1.5em;
+    padding: 5px;
+    background: rgb(235, 233, 233);
+    border: 2px solid white;
+    border-radius: 10px;
+}
+.expense-name  {
+    display: inline-block;
+}
+.category-name {
+    display: inline-block;
+}
+.task-btn  {
+    float: right;
+    margin: 10px;
+    font-size: 1.5em;
+}
+.category-total {
+    float: right;
+}
+.category-link {
+    text-decoration: none;
+    color: black;
+}
+.btn-control {
+    margin: 5px;
+    font-size: 1.5em;
+    border-radius: 10px;
+    border-color: rgb(0, 50, 200);
+    background-color: rgb(0, 50, 200);
+}
+.link-control {
+    text-decoration: none;
+    color: whitesmoke;
+    font-style: italic;
+}
+.task-btn > .link-control {
+    text-decoration: none;
+    color: black;
+    font-style: normal;
+}

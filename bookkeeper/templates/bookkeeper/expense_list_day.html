@@ -1,0 +1,69 @@
+{% extends 'bookkeeper/base.html' %}
+{% block content %}
+
+{% if expense_list.count > 0  %}
+
+<h1>Список расходов:</h1>
+
+
+<h1>{{ day }}</h1>
+<h2>{{ cat }}</h2>
+
+{% for expense in expense_list %}
+<div class="expense">
+    <div class="expense-name">
+        {{ expense.name }} : {{expense.category}}
+        <br><small>{{ expense.payment_date|date:"F j, Y" }}  {{ expense.amount }}</small>
+    </div>
+    <div class="task-btn">
+        <a class="edit-btn" href="{% url 'expense_update' pk=expense.pk %}">Edit</a>
+        <a class="remove-btn" href="{% url 'expense_delete' pk=expense.pk %}">[X]</a>
+    </div>
+</div>
+{% endfor %}
+
+
+<div class="pagination pull-left">
+    <ul>
+        {% if previous_day %}
+            <li class="prev">
+                <a href="/{{ previous_day|date:'Y'  }}/{{ previous_day|date:'m' }}/{{ previous_day|date:'j' }}">
+                    &larr; {{ previous_day|date:"j F Y" }}
+                </a>
+            </li>
+        {% endif %}
+        {% if next_day %}
+            <li class="next">
+                <a href="/{{ next_day|date:'Y'  }}/{{ next_day|date:'m' }}/{{ next_day|date:'j' }}">
+                    {{ next_day|date:"j F Y" }} &rarr;</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+
+
+
+{% else %}
+    <p>Нет внесенных расходов</p>
+{% endif %}
+
+{% block pagination %}
+    {% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+{% endblock %}

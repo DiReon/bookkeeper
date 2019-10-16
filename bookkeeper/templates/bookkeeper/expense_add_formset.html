@@ -1,0 +1,33 @@
+{% extends 'bookkeeper/base.html' %}
+{% block content %}
+<h1>Добавить расходы:</h1>
+<form method="POST" class="">{% csrf_token %}
+{{ formset.management_form }}
+{% for form in formset %}
+    <div>
+        {{form.name}}
+    </div>
+    <div>
+        {{form.amount}}
+    </div>
+    <div>
+        {{form.payment_date}}
+    </div>
+    <div>
+        {{form.category}}
+    </div>
+    <div>
+        {{form.new_cat}}
+    </div>
+    <div>
+        {{form.comments}}
+    </div><br>  
+
+{% endfor %}
+    <button type="submit">Внести</button>
+    
+</form>
+<br>
+
+
+{% endblock %}

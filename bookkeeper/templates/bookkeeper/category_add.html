@@ -1,0 +1,11 @@
+{% extends 'bookkeeper/base.html' %}
+{% block content %}
+<h1>Добавить категорию:</h1>
+<form method="POST" class="">{% csrf_token %}
+    {{ form.as_p}}
+    <button type="submit">Внести</button>
+</form>
+<br>
+
+
+{% endblock %}

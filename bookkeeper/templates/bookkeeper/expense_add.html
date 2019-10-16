@@ -1,0 +1,42 @@
+{% extends 'bookkeeper/base.html' %}
+{% block content %}
+<h1>Добавить расход:</h1>
+<form method="POST" class="">{% csrf_token %}
+
+
+    <div>
+        <label for="name">Название:</label>    
+        {{form.name}}
+    </div>
+    <div>
+        <label for="amount">Сумма</label>    
+        {{form.amount}}
+    </div>
+    <div>
+        <label for="payment_date">Дата:</label>    
+        <input id="payment_date" type="date" name="payment_date" required>
+    </div>
+    <div>
+        <label for="category">Категория</label>    
+        {{form.category}}
+    </div>
+    <div>
+        <label for="category">Новая категория</label>    
+        {{form.new_cat}}
+    </div>
+    <div>
+        <label for="comments">Комментарии</label>    
+        {{form.comments}}
+    </div>  
+    <div>
+        <label for="attachments">Картинка</label>    
+        {{form.attachments}}
+    </div>  
+        
+    <button type="submit">Внести</button>
+    
+</form>
+<br>
+
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'bookkeeper/base.html' %}
+{% block content %}
+
+{% if category_list.count > 0  %}
+
+<h1>Список категорий:</h1>
+
+{% for category in category_list %}
+<div class="expense">
+    <div class="expense-name">
+        {{category.name}}
+    </div>
+    
+    <div class="task-btn">
+        <a class="link-control" href="{% url 'category_update' pk=category.pk %}">edit</a>
+        <a class="link-control" href="{% url 'category_delete' pk=category.pk %}">[X]</a>
+    </div>
+</div>
+{% endfor %}
+
+{% else %}
+    <p>Нет категорий</p>
+{% endif %}
+
+{% endblock %}
