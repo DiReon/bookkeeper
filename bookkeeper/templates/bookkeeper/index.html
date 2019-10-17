@@ -5,18 +5,18 @@
 {% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
 {% bootstrap_css %}         {# Embed Bootstrap CSS #}
 {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
-{{ expense_form.media }}            {# Adds date-picker required JS and CSS #}
+{{ form.media }}            {# Adds date-picker required JS and CSS #}
 {% endcomment %}
 <h2>Add Expense:</h2>
 <form action = "" method="POST" class="">{% csrf_token %}
 
     <div>
         <label for="name"></label>    
-        {{expense_form.name}}
+        {{form.name}}
     </div>
     <div>
         <label for="amount"></label>    
-        {{expense_form.amount}}
+        {{form.amount}}
     </div>
     <div>
         <label for="payment_date"></label>    
@@ -24,15 +24,19 @@
     </div>
     <div>
         <label for="category"></label>    
-        {{expense_form.category}}
+        {{form.category}}
     </div>
     <div>
         <label for="category"></label>    
-        {{expense_form.new_cat}}
+        {{form.new_cat}}
     </div>
     <div>
         <label for="comments"></label>    
-        {{expense_form.comments}}
+        {{form.comments}}
+    </div>  
+    <div>
+        <label for="planned_monthly">Planned monthly</label>    
+        {{form.planned_monthly}}
     </div>  
   
     <button type="submit">Submit</button>
@@ -45,7 +49,7 @@
 {% for expense in expenses %}
 <div class="expense">
     <div class="expense-name">
-        {{ expense.name }} : {{expense.category}}
+        {{ expense.name }} : {{expense.category}} : {% if expense.planned %} PLANNED {% endif %}
         <br><small>Paid on {{ expense.payment_date|date:"F j, Y" }}  {{ expense.amount }} added by {{ expense.author}} on {{expense.created_date}}</small>
     </div>
     

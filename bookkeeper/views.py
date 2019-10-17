@@ -18,21 +18,26 @@ def index(request):
     expenses = Expense.objects.all()[:5]
     incomes = Income.objects.all()[:5]
     if request.method == 'POST':
-        expense_form = ExpenseForm(request.POST)
-        if expense_form.is_valid():
-            expense = expense_form.save(commit=False)
+        form = ExpenseForm(request.POST)
+        if form.is_valid():
+            expense = form.save(commit=False)
             expense.author = request.user
             new_cat = form.cleaned_data["new_cat"]
             if new_cat and (not new_cat in Category.objects.all()):
                 new_category = Category.objects.create(name = new_cat)
                 expense.category = new_category
+            if expense.created_date.date()<expense.payment_date: expense.planned = True
+            if form.cleaned_data["planned_monthly"]:
+                for i in range(1, 3):
+                    Expense.objects.create(author = expense.author, name = expense.name, amount = expense.amount, created_date = expense.created_date, category = expense.category, planned = True, payment_date =datetime.date(expense.payment_date.year, expense.payment_date.month+i, expense.payment_date.day))
             expense.save()
             phrase = phrases[randint(0, len(phrases))]
-            messages.add_message(request, messages.SUCCESS, "Expense added%s!" %phrase)
+            if expense.planned: plan = 'Planned'
+            messages.add_message(request, messages.SUCCESS, "%s Expense added%s!" %('Planned', phrase))
             return redirect('index')
     else:
-        expense_form = ExpenseForm()
-    return render(request, 'bookkeeper/index.html', {'expenses': expenses, 'incomes': incomes,'expense_form': expense_form})
+        form = ExpenseForm()
+    return render(request, 'bookkeeper/index.html', {'expenses': expenses, 'incomes': incomes,'form': form})
 
 @login_required
 def income_add(request):
@@ -322,5 +327,5 @@ test_data_dict = {
 3. По прошествии даты планирования должно появляться сообщение для подтверждения, был ли этот расход реально произведен
 4. Запланированные расходы должны вноситься через отдельную форму, чтобы избежать путаницы. Или через ту же, для краткости?
 5. Опция планирования расходов на определенную дату или ежемесячно
-6. Функция копирования расходов
+6. Функция копирования расходов +
 """

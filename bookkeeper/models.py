@@ -25,12 +25,14 @@ class Expense(models.Model):
     payment_date = models.DateField(blank = True, null = True, verbose_name= "Payment date")
     comments = models.CharField(blank = True, null = True, max_length=200, verbose_name="Comments")
     category = models.ForeignKey(Category, blank = True, null = True, on_delete = models.SET_NULL, verbose_name = "Category")
+    planned = models.BooleanField(default=False, null = True, blank = True)
 
     def __str__(self):
         return self.name
 
     def get_category(self):
         return self.get_category_display()
+        
 
     class Meta:
         ordering = ["-created_date"]
@@ -45,6 +47,7 @@ class Income(models.Model):
     created_date = models.DateTimeField(default = timezone.now)
     income_date = models.DateField(blank = True, null = True, verbose_name= "Received date")
     comments = models.CharField(blank = True, null = True, max_length=200, verbose_name="Comments")    
+    planned = models.BooleanField(default=False, null = True, blank = True)
 
     def __str__(self):
         return self.name

@@ -26,6 +26,7 @@ class ExpenseForm(forms.ModelForm):
                         'placeholder': 'Add new Category',
                     }), required = False)
     category = forms.ModelChoiceField(queryset = Category.objects.all(), empty_label="Select Category")
+    planned_monthly = forms.BooleanField(initial = False, required=False)
     class Meta:
         model = Expense
         fields = ('name', 'amount', 'payment_date', 'category', 'comments')
