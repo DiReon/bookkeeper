@@ -1,33 +1,21 @@
 {% extends 'bookkeeper/base.html' %}
 {% block content %}
 
+<h1>Incomes:</h1>
 
-{% if expense_list.count > 0  %}
-
-
-<h1>Список расходов:</h1>
-
-
-<h1>{{ day }}</h1>
-<h2>{{ cat }}</h2>
-
-{% for expense in expense_list %}
-<div class="expense">
-    <div class="expense-name">
-        {{ expense.name }} : {{expense.category}}
-        <br><small>{{ expense.payment_date|date:"F j, Y" }}  {{ expense.amount }} added by {{ expense.author}} on {{expense.created_date}}</small>
+{% for income in income_list %}
+<div class="income">
+    <div class="income-name">
+        {{ income.name }} 
+        <br><small>{{ income.income_date|date:"F j, Y" }}  {{ income.amount }} added by {{ income.author}} on {{income.created_date}}</small>
     </div>
     
     <div class="task-btn">
-        <a class="link-control" href="{% url 'expense_update' pk=expense.pk %}">edit</a>
-        <a class="link-control" href="{% url 'expense_delete' pk=expense.pk %}">[X]</a>
+        <a class="link-control" href="{% url 'income_update' pk=income.pk %}">edit</a>
+        <a class="link-control" href="{% url 'income_delete' pk=income.pk %}">[X]</a>
     </div>
 </div>
 {% endfor %}
-
-{% else %}
-    <p>Нет внесенных расходов</p>
-{% endif %}
 
 {% block pagination %}
     {% if is_paginated %}

@@ -1,4 +1,5 @@
 import datetime
+from random import randint
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -8,14 +9,57 @@ from django.views import generic
 from django.views.generic.dates import DayArchiveView, MonthArchiveView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.base import TemplateView
-from .models import Expense, Category
-from .forms import ExpenseForm, CategoryForm, SearchForm
+from .models import Expense, Category, Income
+from .forms import ExpenseForm, IncomeForm, CategoryForm, SearchForm
 from django.forms.formsets import formset_factory
+
+@login_required
+def index(request):
+    expenses = Expense.objects.all()[:5]
+    incomes = Income.objects.all()[:5]
+    if request.method == 'POST':
+        expense_form = ExpenseForm(request.POST)
+        if expense_form.is_valid():
+            expense = expense_form.save(commit=False)
+            expense.author = request.user
+            new_cat = form.cleaned_data["new_cat"]
+            if new_cat and (not new_cat in Category.objects.all()):
+                new_category = Category.objects.create(name = new_cat)
+                expense.category = new_category
+            expense.save()
+            phrase = phrases[randint(0, len(phrases))]
+            messages.add_message(request, messages.SUCCESS, "Expense added%s!" %phrase)
+            return redirect('index')
+    else:
+        expense_form = ExpenseForm()
+    return render(request, 'bookkeeper/index.html', {'expenses': expenses, 'incomes': incomes,'expense_form': expense_form})
+
+@login_required
+def income_add(request):
+    expenses = Expense.objects.all()[:5]
+    incomes = Income.objects.all()[:5]
+    
+    if request.method == 'POST':
+        income_form = IncomeForm(request.POST)
+        if income_form.is_valid():
+            income = income_form.save(commit=False)
+            income.author = request.user
+            income.save()
+            messages.add_message(self.request, messages.SUCCESS, "Income added!:)")
+            return redirect('income_add')
+    else:
+        income_form = IncomeForm()
+    return render(request, 'bookkeeper/income_add.html', {'expenses': expenses, 'incomes': incomes, 'income_form':income_form})
 
 class ExpenseList(generic.ListView):
     template_name = "/bookkeeper/expense_list.html"
     model = Expense
     queryset = Expense.objects.order_by("-created_date")
+    paginate_by = 30
+
+class IncomeList(generic.ListView):
+    template_name = "/bookkeeper/income_list.html"
+    model = Income
     paginate_by = 30
 
 class CategoryList(generic.ListView):
@@ -25,15 +69,17 @@ class CategoryList(generic.ListView):
 class ExpenseDayView(DayArchiveView):
     model = Expense
     date_field = "payment_date"
-    template_name = "/bookkeeper/expense_list_day.html"
-    allow_future = False
+    template_name = "bookkeeper/expense_list_day.html"
+    allow_future = True
+    allow_empty = True
     month_format = "%m"
 
 class ExpenseMonthView(MonthArchiveView):
     model = Expense
     date_field = "payment_date"
     template_name = "bookkeeper/summary_list.html"
-    allow_future = False
+    allow_empty = True
+    allow_future = True
     month_format = "%m"
 
     def get_context_data(self, **kwargs):
@@ -59,7 +105,8 @@ class ExpenseMonthCategoryView(MonthArchiveView):
     model = Expense
     date_field = "payment_date"
     template_name = "bookkeeper/expense_list.html"
-    allow_future = False
+    allow_future = True
+    allow_empty = True
     month_format = "%m"
 
     def get_context_data(self, **kwargs):
@@ -73,30 +120,8 @@ class ExpenseMonthCategoryView(MonthArchiveView):
         categories = Category.objects.order_by("name")
         expenses = Expense.objects.filter(category__name = context["cat"], payment_date__year = int(year), payment_date__month = int(month))
         context["expense_list"] = expenses
-        context["expense_1"] = expenses[0]
-        context["expense_1_cat"] = expenses[0].category
         return context
 
-"""
-class ExpenseListFormView(TemplateView):
-    model = Expense
-    template_name = "bookkeeper/expense.html"
-    formset = ExpenseFormset()
-    def get(self, request, *args, **kwargs):
-        self.formset = ExpenseFormset(queryset = Expense.objects.order_by("-payment_date"))
-        return super(ExpenseListFormView, self).get(request, *args, **kwargs)
-    def get_context_data(self, **kwargs):
-        context = super(ExpenseListFormView, self).get_context_data(**kwargs)
-        context["formset"] =self.formset
-        return context
-    def post(self, request, *args, **kwargs):
-        self.formset = ExpenseFormset(request.POST)
-        if self.formset.is_valid():
-            self.formset.save()
-            return redirect('expense_list')
-        else:
-            return super(ExpenseListFormView, self).get(request, *args, **kwargs)
-"""
 @login_required
 def expense_add_formset(request):
     user = request.user
@@ -117,22 +142,15 @@ def expense_add_formset(request):
                     expense.save()
                     i+=1
         if i==1: 
-            end = "сь"
-            end2 = "а"
-        if i in range (2,5): 
-            end = "си"
-            end2 = "ы"
+            end = ""
         else: 
-            end = "сей"
-            end2 = "о"
+            end = "s"
         if i!=0: 
-            messages.add_message(request, messages.SUCCESS, "%s запи%s успешно внесен%s, ты молодец! " %(i, end, end2))
+            messages.add_message(request, messages.SUCCESS, "%s expense%s added " %(i, end))
         return redirect('expense_list')
     else:
         formset = ExpenseFormset()
     return render(request, 'bookkeeper/expense_add_formset.html', {'formset': formset})
-
-
 
 class ExpenseCreate(CreateView):
     model = Expense
@@ -148,14 +166,16 @@ class ExpenseCreate(CreateView):
             expense.category = new_category
         expense.author = self.request.user
         expense.save()
-        messages.add_message(self.request, messages.SUCCESS, "Запись успешно внесена, ты молодец!")
+        phrase = phrases[randint(0, len(phrases))]
+        messages.add_message(self.request, messages.SUCCESS, "Expense added! %s" %phrase)
         return redirect('expense_list')
+    
 
 class CategoryCreate(CreateView):
     model = Category
     form_class = CategoryForm
     template_name = 'bookkeeper/category_add.html'
-    success_url = '/'
+    success_url = '/category_list'
 
 class CategoryDelete(DeleteView):
     model = Category
@@ -165,18 +185,36 @@ class CategoryDelete(DeleteView):
 class CategoryUpdate(UpdateView):
     model = Category
     form_class = CategoryForm
-    success_url ='/'
+    success_url ='/category_list'
     template_name = 'bookkeeper/category_add.html'
 
+class IncomeDelete(DeleteView):
+    model = Income
+    success_url = '/income_list/'
+    template_name = 'bookkeeper/confirm_delete.html'
+
+class IncomeUpdate(UpdateView):
+    model = Income
+    form_class = IncomeForm
+    success_url ='/income_list'
+    template_name = 'bookkeeper/income_add.html'
+    
+    def form_valid(self, form):
+        income = form.save(commit=False)
+        income.author = self.request.user
+        income.save()
+        messages.add_message(self.request, messages.SUCCESS, "Income updated!")
+        return redirect('income_list')
+    
 class ExpenseDelete(DeleteView):
     model = Expense
-    success_url = '/'
+    success_url = '/expense_list/'
     template_name = 'bookkeeper/confirm_delete.html'
 
 class ExpenseUpdate(UpdateView):
     model = Expense
     form_class = ExpenseForm
-    success_url ='/'
+    success_url ='/expense_list'
     template_name = 'bookkeeper/expense_add.html'
     
     def form_valid(self, form):
@@ -187,8 +225,9 @@ class ExpenseUpdate(UpdateView):
             expense.category = new_category
         expense.author = self.request.user
         expense.save()
-        messages.add_message(self.request, messages.SUCCESS, "Запись успешно обновлена!")
+        messages.add_message(self.request, messages.SUCCESS, "Expense updated!")
         return redirect('expense_list')
+    
 
 class SearchResultsView(generic.ListView):
     model = Expense
@@ -217,6 +256,21 @@ def expense_delete_all(request):
 #month_list = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
 month_list = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
+phrases = [
+    ', Любимая',
+    ", моя Звездочка",
+    ", моя Лапушка",
+    ", мое Солнышко",
+    ", Региночка",
+    ", Женушка:)",
+    ", Женушка:)",
+    ", Женушка:)",
+    ", мое Счастье",
+    ", мое Сокровище",
+    ", мое Чудо",
+    ", моя Радость",
+]
+
 test_data_dict = {
     "House expenses": ["Rent", "Chemicals", "Cleaning", "Electricity", "Water", "Internet"],
     "Car": ["Gasoline", "Repair", "Consumables"],
@@ -226,7 +280,5 @@ test_data_dict = {
     "Medical expenses": ["Sun protection cream"],
     "Restaurants and cafe": ["Burger King", "Baskin&Robbins", "PizzaHut"],
     "Taxi and transport": ["taxi 01.01.2019", "bus 02.01.2019", "train 03.01.2019"],
-    
-
 
 }

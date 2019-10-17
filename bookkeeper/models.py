@@ -43,7 +43,7 @@ class Income(models.Model):
     name = models.CharField(max_length=200, verbose_name="Description")
     amount = models.PositiveIntegerField(blank = True, null = True, verbose_name = "Amount")
     created_date = models.DateTimeField(default = timezone.now)
-    received_date = models.DateField(blank = True, null = True, verbose_name= "Received date")
+    income_date = models.DateField(blank = True, null = True, verbose_name= "Received date")
     comments = models.CharField(blank = True, null = True, max_length=200, verbose_name="Comments")    
 
     def __str__(self):

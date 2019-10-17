@@ -1,35 +1,55 @@
 from django import forms
-from .models import Expense, Category
-
+from .models import Expense, Category, Income
+from bootstrap_datepicker_plus import DatePickerInput
 
 class ExpenseForm(forms.ModelForm):
     
-    payment_date = forms.DateField(required = False)
+    payment_date = forms.DateField(
+        widget=DatePickerInput(format='%m/%d/%Y'), required = False)
     name = forms.CharField(
                     max_length=200,
                     widget=forms.TextInput(attrs={
-                        'placeholder': 'Название',
+                        'placeholder': 'Enter description here...',
                     }), required = False)
     amount = forms.IntegerField(
                     widget=forms.NumberInput(attrs={
-                        'placeholder': 'Сумма',
+                        'placeholder': 'Enter amount here...',
                     }), required = False)
     comments = forms.CharField(
                     max_length=200,
                     widget=forms.TextInput(attrs={
-                        'placeholder': 'Комментарии' 
+                        'placeholder': 'Enter comments' 
                     }), required = False)
     new_cat = forms.CharField(
                     max_length=200,
                     widget=forms.TextInput(attrs={
-                        'placeholder': 'Новая категория',
+                        'placeholder': 'Add new Category',
                     }), required = False)
-
+    category = forms.ModelChoiceField(queryset = Category.objects.all(), empty_label="Select Category")
     class Meta:
         model = Expense
-        fields = ('name', 'amount', 'payment_date', 'category', 'comments', 
-        #attachments
-        )
+        fields = ('name', 'amount', 'payment_date', 'category', 'comments')
+
+class IncomeForm(forms.ModelForm):
+    income_date = forms.DateField(required = False)
+    name = forms.CharField(
+                    max_length=200,
+                    widget=forms.TextInput(attrs={
+                        'placeholder': 'Description',
+                    }), required = False)
+    amount = forms.IntegerField(
+                    widget=forms.NumberInput(attrs={
+                        'placeholder': 'Amount',
+                    }), required = False)
+    comments = forms.CharField(
+                    max_length=200,
+                    widget=forms.TextInput(attrs={
+                        'placeholder': 'Comments' 
+                    }), required = False)
+    
+    class Meta:
+        model = Income
+        fields = ('name', 'amount', 'income_date', 'comments')
 
 class CategoryForm(forms.ModelForm):
     name = forms.CharField(label="Категория",

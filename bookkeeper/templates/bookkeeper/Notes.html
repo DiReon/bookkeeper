@@ -38,3 +38,15 @@ class SummaryListView(generic.ListView):
         return context
     def queryset(self):
         return Expense.objects.filter(category = self.cat).order_by("name")
+
+
+        if request.method == 'POST':
+        form = ExpenseForm(request.POST)
+        if form.is_valid():
+            expense = form.save(commit=False)
+            expense.author = request.user
+            expense.save()
+            return redirect('expense_list')
+    else:
+        form = ExpenseForm()
+    return render(request, 'bookkeeper/expense_list.html', {'expenses': expenses, 'form': form})

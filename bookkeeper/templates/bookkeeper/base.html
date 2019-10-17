@@ -18,7 +18,8 @@
                 <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
             {% endif %}
         </div>
-                <button class="btn-control"><a class = "link-control" href="{% url 'expense_add' %}">+</a></button>
+                <button class="btn-control"><a class = "link-control" href="/">+ <small>expense</small></a></button>
+                <button class="btn-control"><a class = "link-control" href="{% url 'income_add' %}">+ <small>income</small></a></button>
                 <button class="btn-control"><a class = "link-control" href="{% url 'expense_add_formset' %}">+++</a></button>
                 <button class="btn-control"><a class = "link-control" href="{% url 'category_add' %}">New Cat</a></button>
                 <button class="btn-control"><a class = "link-control" href="{% url 'expense_test_add' %}">+Test+</a></button>
@@ -26,12 +27,13 @@
                 {% load l10n %}
                 {% language 'en' %}
                 {% now "Y/m" as current_month %}
-                <button class="btn-control"><a class = "link-control" href="/{{ current_month|unlocalize }}">Месяц</a></button>
-                <button class="btn-control"><a class = "link-control" href="{% url 'expense_list' %}">Все расходы</a></button>
-                <button class="btn-control"><a class = "link-control" href="{% url 'category_list' %}">Все категории</a></button>
+                <button class="btn-control"><a class = "link-control" href="/{{ current_month|unlocalize }}">Monthly</a></button>
+                <button class="btn-control"><a class = "link-control" href="{% url 'expense_list' %}">Expenses</a></button>
+                <button class="btn-control"><a class = "link-control" href="{% url 'category_list' %}">Categories</a></button>
+                <button class="btn-control"><a class = "link-control" href="{% url 'income_list' %}">Incomes</a></button>
                 <button class="btn-control"><a class = "link-control" href="{% url 'expense_delete_all'%}">Удалить все</a></button>
                 {% now "Y/m/d" as today %}
-                <button class="btn-control"><a class = "link-control" href='/{{ today|unlocalize }}'>Расходы сегодня</a></button>
+                <button class="btn-control"><a class = "link-control" href='/{{ today|unlocalize }}'>Daily</a></button>
                 <br><br>
                 <form action="{% url 'search_results' %}" method="GET">
                     <input name="q" type="text" placeholder="Search...">

@@ -23,6 +23,13 @@
 {% endfor %}
 
 
+
+
+{% else %}
+    <p>Нет внесенных расходов</p>
+{% endif %}
+
+
 <div class="pagination pull-left">
     <ul>
         {% if previous_day %}
@@ -41,11 +48,6 @@
     </ul>
 </div>
 
-
-
-{% else %}
-    <p>Нет внесенных расходов</p>
-{% endif %}
 
 {% block pagination %}
     {% if is_paginated %}

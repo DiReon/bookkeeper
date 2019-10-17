@@ -40,8 +40,13 @@ INSTALLED_APPS = [
     'bookkeeper',
     'django.contrib.sites',
     'django.contrib.flatpages',
+    'bootstrap_datepicker_plus',
 
 ]
+
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -108,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'ru-RU'
+LANGUAGE_CODE = 'en-en'
 
 TIME_ZONE = 'Asia/Yekaterinburg'
 
