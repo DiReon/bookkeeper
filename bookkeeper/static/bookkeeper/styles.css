@@ -5,7 +5,7 @@ body {
 h1, h2, h3 {
     font-family: Lobster;
 }
-.expense {
+.expense, .income{
     
     padding: 5px;
     background: rgb(235, 233, 233);
@@ -19,7 +19,7 @@ h1, h2, h3 {
     border: 2px solid white;
     border-radius: 10px;
 }
-.expense-name  {
+.expense-name, .income-name  {
     display: inline-block;
 }
 .category-name {

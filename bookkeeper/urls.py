@@ -19,6 +19,9 @@ urlpatterns = [
                 path('income_add/', views.income_add, name="income_add"),
                 path('category_add/', login_required(views.CategoryCreate.as_view()), name="category_add"),
                 path('expense_add_formset/', views.expense_add_formset, name="expense_add_formset"),
+                #Copying items
+                path('<int:pk>/income_copy/', login_required(views.IncomeCopy.as_view()), name="income_copy"),
+                path('<int:pk>/expense_copy/', login_required(views.ExpenseCopy.as_view()), name="expense_copy"),
                 #Updating items
                 path('<int:pk>/expense_update/', login_required(views.ExpenseUpdate.as_view()), name="expense_update"),
                 path('<int:pk>/income_update/', login_required(views.IncomeUpdate.as_view()), name="income_update"),

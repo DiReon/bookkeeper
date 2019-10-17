@@ -40,16 +40,16 @@ def income_add(request):
     incomes = Income.objects.all()[:5]
     
     if request.method == 'POST':
-        income_form = IncomeForm(request.POST)
-        if income_form.is_valid():
-            income = income_form.save(commit=False)
+        form = IncomeForm(request.POST)
+        if form.is_valid():
+            income = form.save(commit=False)
             income.author = request.user
             income.save()
-            messages.add_message(self.request, messages.SUCCESS, "Income added!:)")
+            messages.add_message(request, messages.SUCCESS, "Income added!:)")
             return redirect('income_add')
     else:
-        income_form = IncomeForm()
-    return render(request, 'bookkeeper/income_add.html', {'expenses': expenses, 'incomes': incomes, 'income_form':income_form})
+        form = IncomeForm()
+    return render(request, 'bookkeeper/income_add.html', {'expenses': expenses, 'incomes': incomes, 'form':form})
 
 class ExpenseList(generic.ListView):
     template_name = "/bookkeeper/expense_list.html"
@@ -228,6 +228,40 @@ class ExpenseUpdate(UpdateView):
         messages.add_message(self.request, messages.SUCCESS, "Expense updated!")
         return redirect('expense_list')
     
+class ExpenseCopy(UpdateView):
+    model = Expense
+    form_class = ExpenseForm
+    success_url ='/expense_list'
+    template_name = 'bookkeeper/expense_add.html'
+    
+    def form_valid(self, form):
+        expense = form.save(commit=False)
+        expense.pk = None
+        expense.created_date = timezone.now()
+        new_cat = form.cleaned_data["new_cat"]
+        if new_cat and (not new_cat in Category.objects.all()):
+            new_category = Category.objects.create(name = new_cat)
+            expense.category = new_category
+        expense.author = self.request.user
+        expense.save()
+        phrase = phrases[randint(0, len(phrases))]
+        messages.add_message(request, messages.SUCCESS, "Expense added%s!" %phrase)
+        return redirect('expense_list')
+
+class IncomeCopy(UpdateView):
+    model = Income
+    form_class = IncomeForm
+    success_url ='/income_list'
+    template_name = 'bookkeeper/income_add.html'
+    
+    def form_valid(self, form):
+        income = form.save(commit=False)
+        income.pk = None
+        income.created_date = timezone.now()
+        income.author = self.request.user
+        income.save()
+        messages.add_message(self.request, messages.SUCCESS, "Income added!:)")
+        return redirect('income_list')
 
 class SearchResultsView(generic.ListView):
     model = Expense
@@ -282,3 +316,11 @@ test_data_dict = {
     "Taxi and transport": ["taxi 01.01.2019", "bus 02.01.2019", "train 03.01.2019"],
 
 }
+"""Планирование расходов:
+1. Расход автоматически копируется на год вперед на определенное число каждого месяца
+2. У запланированнгого расхода должна быть метка planned
+3. По прошествии даты планирования должно появляться сообщение для подтверждения, был ли этот расход реально произведен
+4. Запланированные расходы должны вноситься через отдельную форму, чтобы избежать путаницы. Или через ту же, для краткости?
+5. Опция планирования расходов на определенную дату или ежемесячно
+6. Функция копирования расходов
+"""

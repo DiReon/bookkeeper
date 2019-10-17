@@ -20,6 +20,7 @@
     
     <div class="task-btn">
         <a class="link-control" href="{% url 'expense_update' pk=expense.pk %}">edit</a>
+        <a class="link-control" href="{% url 'expense_copy' pk=expense.pk %}">Copy</a>
         <a class="link-control" href="{% url 'expense_delete' pk=expense.pk %}">[X]</a>
     </div>
 </div>

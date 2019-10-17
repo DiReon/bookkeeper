@@ -31,25 +31,15 @@ class ExpenseForm(forms.ModelForm):
         fields = ('name', 'amount', 'payment_date', 'category', 'comments')
 
 class IncomeForm(forms.ModelForm):
-    income_date = forms.DateField(required = False)
-    name = forms.CharField(
-                    max_length=200,
-                    widget=forms.TextInput(attrs={
-                        'placeholder': 'Description',
-                    }), required = False)
-    amount = forms.IntegerField(
-                    widget=forms.NumberInput(attrs={
-                        'placeholder': 'Amount',
-                    }), required = False)
-    comments = forms.CharField(
-                    max_length=200,
-                    widget=forms.TextInput(attrs={
-                        'placeholder': 'Comments' 
-                    }), required = False)
+    income_date = forms.DateField(label="", widget=forms.TextInput(attrs={'placeholder': 'Add date in format mm/dd/yyyy',}), required = False)
+    name = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'placeholder': 'Add description here...',}), required = False)
+    amount = forms.IntegerField(label="", widget=forms.NumberInput(attrs={'placeholder': 'Enter amount',}), required = False)
+    comments = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'placeholder': 'Add comments'}), required = False)
     
     class Meta:
         model = Income
         fields = ('name', 'amount', 'income_date', 'comments')
+     
 
 class CategoryForm(forms.ModelForm):
     name = forms.CharField(label="Категория",

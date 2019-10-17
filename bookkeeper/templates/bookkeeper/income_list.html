@@ -12,6 +12,7 @@
     
     <div class="task-btn">
         <a class="link-control" href="{% url 'income_update' pk=income.pk %}">edit</a>
+        <a class="link-control" href="{% url 'income_copy' pk=income.pk %}">Copy</a>
         <a class="link-control" href="{% url 'income_delete' pk=income.pk %}">[X]</a>
     </div>
 </div>
