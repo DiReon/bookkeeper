@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-en'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Yekaterinburg'
 
@@ -140,7 +140,6 @@ MEDIA_URL = '/media/'
 
 SITE_ID = 1
 
-…
 # Configure Django App for Heroku.
 import django_heroku
 django_heroku.settings(locals())
