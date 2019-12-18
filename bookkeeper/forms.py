@@ -4,8 +4,7 @@ from bootstrap_datepicker_plus import DatePickerInput
 
 class ExpenseForm(forms.ModelForm):
     
-    payment_date = forms.DateField(
-        widget=DatePickerInput(format='%m/%d/%Y'), required = False)
+    payment_date = forms.DateField(widget=DatePickerInput(format='%m/%d/%Y'), required = False)
     name = forms.CharField(
                     max_length=200,
                     widget=forms.TextInput(attrs={
@@ -32,10 +31,11 @@ class ExpenseForm(forms.ModelForm):
         fields = ('name', 'amount', 'payment_date', 'category', 'comments')
 
 class IncomeForm(forms.ModelForm):
-    income_date = forms.DateField(label="", widget=forms.TextInput(attrs={'placeholder': 'Add date in format mm/dd/yyyy',}), required = False)
+    income_date = forms.DateField(widget=DatePickerInput(format='%m/%d/%Y'), required = False)
     name = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'placeholder': 'Add description here...',}), required = False)
     amount = forms.IntegerField(label="", widget=forms.NumberInput(attrs={'placeholder': 'Enter amount',}), required = False)
     comments = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'placeholder': 'Add comments'}), required = False)
+    planned_monthly = forms.BooleanField(initial = False, required=False)
     
     class Meta:
         model = Income

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'bootstrap_datepicker_plus',
+    'bootstrap4',
 
 ]
 

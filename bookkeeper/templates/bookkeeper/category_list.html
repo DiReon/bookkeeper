@@ -9,12 +9,14 @@
 <div class="expense">
     <div class="expense-name">
         {{category.name}}
+        <br><small>-------------------------</small>
     </div>
     
     <div class="task-btn">
         <a class="link-control" href="{% url 'category_update' pk=category.pk %}">edit</a>
         <a class="link-control" href="{% url 'category_delete' pk=category.pk %}">[X]</a>
     </div>
+
 </div>
 {% endfor %}
 

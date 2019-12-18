@@ -14,7 +14,7 @@
 {% for expense in expense_list %}
 <div class="expense">
     <div class="expense-name">
-        {{ expense.name }} : {{expense.category}}
+        {{ expense.name }} : {{expense.category}} {% if expense.planned %} : PLANNED {% endif %}
         <br><small>{{ expense.payment_date|date:"F j, Y" }}  {{ expense.amount }} added by {{ expense.author}} on {{expense.created_date}}</small>
     </div>
     

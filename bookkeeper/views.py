@@ -29,9 +29,10 @@ def index(request):
             if expense.created_date.date()<expense.payment_date: expense.planned = True
             if form.cleaned_data["planned_monthly"]:
                 for i in range(1, 3):
-                    Expense.objects.create(author = expense.author, name = expense.name, amount = expense.amount, created_date = expense.created_date, category = expense.category, planned = True, payment_date =datetime.date(expense.payment_date.year, expense.payment_date.month+i, expense.payment_date.day))
+                    Expense.objects.create(author = expense.author, name = expense.name, amount = expense.amount, created_date = expense.created_date, category = expense.category, planned = True, payment_date =add_month(expense.payment_date, i))
             expense.save()
-            phrase = phrases[randint(0, len(phrases))]
+            phrase = ""
+            if request.user == "Regina": phrase = phrases[randint(0, len(phrases))]
             if expense.planned: plan = 'Planned'
             messages.add_message(request, messages.SUCCESS, "%s Expense added%s!" %('Planned', phrase))
             return redirect('index')
@@ -49,8 +50,15 @@ def income_add(request):
         if form.is_valid():
             income = form.save(commit=False)
             income.author = request.user
+            if income.created_date.date()<income.income_date: income.planned = True
+            if form.cleaned_data["planned_monthly"]:
+                for i in range(1, 3):
+                    Income.objects.create(author = income.author, name = income.name, amount = income.amount, created_date = income.created_date, planned = True, income_date = add_month(income.income_date, i))
             income.save()
-            messages.add_message(request, messages.SUCCESS, "Income added!:)")
+            phrase = ""
+            if request.user == "Regina": phrase = phrases[randint(0, len(phrases))]
+            if income.planned: plan = 'Planned'
+            messages.add_message(request, messages.SUCCESS, "%s Income added%s!" %('Planned', phrase))
             return redirect('income_add')
     else:
         form = IncomeForm()
@@ -144,6 +152,10 @@ def expense_add_formset(request):
                         expense.category = new_category
                     expense.author = user
                     expense.payment_date = form.cleaned_data["payment_date"]
+                    if expense.created_date.date()<expense.payment_date: expense.planned = True
+                    if form.cleaned_data["planned_monthly"]:
+                        for i in range(1, 3):
+                            Expense.objects.create(author = expense.author, name = expense.name, amount = expense.amount, created_date = expense.created_date, category = expense.category, planned = True, payment_date =add_month(expense.payment_date, i))
                     expense.save()
                     i+=1
         if i==1: 
@@ -170,8 +182,13 @@ class ExpenseCreate(CreateView):
             new_category = Category.objects.create(name = new_cat)
             expense.category = new_category
         expense.author = self.request.user
+        if expense.created_date.date()<expense.payment_date: expense.planned = True
+        if form.cleaned_data["planned_monthly"]:
+            for i in range(1, 3):
+                Expense.objects.create(author = expense.author, name = expense.name, amount = expense.amount, created_date = expense.created_date, category = expense.category, planned = True, payment_date =add_month(expense.payment_date, i))
         expense.save()
-        phrase = phrases[randint(0, len(phrases))]
+        phrase = ""
+        if request.user == "Regina":  phrase = phrases[randint(0, len(phrases))]
         messages.add_message(self.request, messages.SUCCESS, "Expense added! %s" %phrase)
         return redirect('expense_list')
     
@@ -207,8 +224,17 @@ class IncomeUpdate(UpdateView):
     def form_valid(self, form):
         income = form.save(commit=False)
         income.author = self.request.user
+        if income.created_date.date() < income.income_date: income.planned = True
+        if income.created_date.date() >= income.income_date: income.planned = False
+        if form.cleaned_data["planned_monthly"]:
+            for i in range(1, 3):
+                Income.objects.create(author = income.author, name = income.name, amount = income.amount, created_date = income.created_date, planned = True, income_date = add_month(income.income_date, i))
         income.save()
-        messages.add_message(self.request, messages.SUCCESS, "Income updated!")
+        phrase = ""
+        if request.user == "Regina": phrase = phrases[randint(0, len(phrases))]
+        if income.planned: plan = 'Planned'
+        messages.add_message(self.request, messages.SUCCESS, "%s Income updated%s!" %('Planned', phrase))
+        income.save()
         return redirect('income_list')
     
 class ExpenseDelete(DeleteView):
@@ -229,6 +255,11 @@ class ExpenseUpdate(UpdateView):
             new_category = Category.objects.create(name = new_cat)
             expense.category = new_category
         expense.author = self.request.user
+        if timezone.now().date()<expense.payment_date: expense.planned = True
+        if timezone.now().date()>=expense.payment_date: expense.planned = False
+        if form.cleaned_data["planned_monthly"]:
+            for i in range(1, 3):
+                Expense.objects.create(author = expense.author, name = expense.name, amount = expense.amount, created_date = expense.created_date, category = expense.category, planned = True, payment_date =add_month(expense.payment_date, i))
         expense.save()
         messages.add_message(self.request, messages.SUCCESS, "Expense updated!")
         return redirect('expense_list')
@@ -248,9 +279,15 @@ class ExpenseCopy(UpdateView):
             new_category = Category.objects.create(name = new_cat)
             expense.category = new_category
         expense.author = self.request.user
+        if timezone.now().date() < expense.payment_date: expense.planned = True
+        if timezone.now().date() >= expense.payment_date: expense.planned = False
+        if form.cleaned_data["planned_monthly"]:
+            for i in range(1, 3):
+                Expense.objects.create(author = expense.author, name = expense.name, amount = expense.amount, created_date = expense.created_date, category = expense.category, planned = True, payment_date =add_month(expense.payment_date, i))
         expense.save()
-        phrase = phrases[randint(0, len(phrases))]
-        messages.add_message(request, messages.SUCCESS, "Expense added%s!" %phrase)
+        phrase = ""
+        if self.request.user == "Regina": phrase = phrases[randint(0, len(phrases))]
+        messages.add_message(self.request, messages.SUCCESS, "Expense added%s!" %phrase)
         return redirect('expense_list')
 
 class IncomeCopy(UpdateView):
@@ -264,6 +301,12 @@ class IncomeCopy(UpdateView):
         income.pk = None
         income.created_date = timezone.now()
         income.author = self.request.user
+        if income.created_date.date() < income.income_date: income.planned = True
+        if income.created_date.date() >= income.income_date: income.planned = False
+        if form.cleaned_data["planned_monthly"]:
+            for i in range(1, 3):
+                Income.objects.create(author = income.author, name = income.name, amount = income.amount, created_date = income.created_date, planned = True, income_date = add_month(income.income_date, i))
+
         income.save()
         messages.add_message(self.request, messages.SUCCESS, "Income added!:)")
         return redirect('income_list')
@@ -291,6 +334,16 @@ def expense_test_add(request):
 def expense_delete_all(request):
     Expense.objects.all().delete()
     return redirect('expense_list')
+
+
+def add_month(date, your_month):
+    year = date.year
+    month = date.month
+    day = date.day
+    year+=int((month+your_month)//12.001)
+    month = int(month+your_month-12*((month+your_month)//12.001))
+    return datetime.date(year, month, day)
+
 
 #month_list = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
 month_list = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
