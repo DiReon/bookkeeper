@@ -1,33 +1,35 @@
 {% extends 'bookkeeper/base.html' %}
 {% block content %}
 
-<h1>Расходы по категориям за {{month_j}} {{year}} :</h1>
+<h3>Expenses by category for {{month_j}} {{year}} :</h3>
 
 {% for key, value in totals.items %}
-<div class="category">
-    <div class="category-name"><a class ="category-link" href="/{{ year}}/{{ month }}/{{ key }}">{{key}}:</a></div>
-    <div class="category-total">{{value}}</div>
+<ul class="list-group">
+    <li class="list-group-item">
+        <a class ="nav-link" href="/{{ year}}/{{ month }}/{{ key }}">{{key}}:</a>
+        <div>Total: {{value}} RUB</div>
+    </li>
 </div>
 {% endfor %}
 
-<div class="pagination pull-left">
-    <ul>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
         {% if previous_month %}
-            <li class="prev">
-                <a href="/{{ previous_month|date:'Y'  }}/{{ previous_month|date:'m' }}">
-                    &larr; {{ previous_month|date:"F Y" }}
-                </a>
-            </li>
-        {% endif %}
-        {% if next_month %}
-            <li class="next">
-                <a href="/{{ next_month|date:'Y'  }}/{{ next_month|date:'m' }}">
-                    {{ next_month|date:"F Y" }} &rarr;</a>
-            </li>
-        {% endif %}
+      <li class="page-item">
+        <a class="page-link" href="/{{ previous_month|date:'Y'  }}/{{ previous_month|date:'m' }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;{{ previous_month|date:"F Y" }}</span>
+        </a>
+      </li>
+      {% endif %}
+      {% if next_month %}
+      <li class="page-item">
+        <a class="page-link" href="/{{ next_month|date:'Y'  }}/{{ next_month|date:'m' }}" aria-label="Next">
+          <span aria-hidden="true">{{ next_month|date:"F Y" }}&raquo;</span>
+        </a>
+      </li>
+      {% endif %}
     </ul>
-</div>
-
+</nav>
 
 {% endblock %}
 

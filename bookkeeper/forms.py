@@ -8,23 +8,30 @@ class ExpenseForm(forms.ModelForm):
     name = forms.CharField(
                     max_length=200,
                     widget=forms.TextInput(attrs={
-                        'placeholder': 'Enter description here...',
-                    }), required = False)
+                        'placeholder': 'Description...',
+                        'class': 'form-control',
+                    }),  required = False)
     amount = forms.IntegerField(
                     widget=forms.NumberInput(attrs={
-                        'placeholder': 'Enter amount here...',
+                        'placeholder': 'Amount...',
+                        'class': 'form-control',
                     }), required = False)
     comments = forms.CharField(
                     max_length=200,
                     widget=forms.TextInput(attrs={
-                        'placeholder': 'Enter comments' 
+                        'placeholder': 'Comments...' ,
+                        'class': 'form-control',
                     }), required = False)
     new_cat = forms.CharField(
                     max_length=200,
                     widget=forms.TextInput(attrs={
-                        'placeholder': 'Add new Category',
+                        'placeholder': 'Or add new Category',
+                        'class': 'form-control',
                     }), required = False)
-    category = forms.ModelChoiceField(queryset = Category.objects.all(), empty_label="Select Category")
+    
+    category = forms.ModelChoiceField(queryset = Category.objects.all(), empty_label="Select Category", widget=forms.Select(attrs={
+        'class': 'form-control',
+    }))
     planned_monthly = forms.BooleanField(initial = False, required=False)
     class Meta:
         model = Expense
@@ -32,9 +39,21 @@ class ExpenseForm(forms.ModelForm):
 
 class IncomeForm(forms.ModelForm):
     income_date = forms.DateField(widget=DatePickerInput(format='%m/%d/%Y'), required = False)
-    name = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'placeholder': 'Add description here...',}), required = False)
-    amount = forms.IntegerField(label="", widget=forms.NumberInput(attrs={'placeholder': 'Enter amount',}), required = False)
-    comments = forms.CharField(label="", max_length=200, widget=forms.TextInput(attrs={'placeholder': 'Add comments'}), required = False)
+    name = forms.CharField(label="", max_length=200, widget=forms.TextInput(
+        attrs={
+            'placeholder': 'Description...',
+            'class': 'form-control',
+            }), required = False)
+    amount = forms.IntegerField(label="", widget=forms.NumberInput(
+        attrs={
+            'placeholder': 'Amount...',
+            'class': 'form-control',
+            }), required = False)
+    comments = forms.CharField(label="", max_length=200, widget=forms.TextInput(
+        attrs={
+            'placeholder': 'Comments...',
+            'class': 'form-control',
+            }), required = False)
     planned_monthly = forms.BooleanField(initial = False, required=False)
     
     class Meta:
@@ -46,7 +65,7 @@ class CategoryForm(forms.ModelForm):
     name = forms.CharField(label="Категория",
                     max_length=200,
                     widget=forms.TextInput(attrs={
-                        'placeholder': 'Введите категорию',
+                        'placeholder': 'Enter category',
                     }))
     class Meta:
         model = Category
@@ -56,5 +75,5 @@ class SearchForm(forms.Form):
     text = forms.CharField(
                     max_length=200,
                     widget=forms.TextInput(attrs={
-                        'placeholder': 'Искать..',
+                        'placeholder': 'Search..',
                     }))

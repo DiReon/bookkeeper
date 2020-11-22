@@ -1,40 +1,65 @@
 {% extends 'bookkeeper/base.html' %}
 {% block content %}
 
-<h1>Incomes:</h1>
+<a class = "btn btn-light btn-lg" href="{% url 'income_add' %}"><i class="fas fa-plus-circle fa-2x" style="color: green"></i></a>
+
+{% if income_list.count > 0  %}
+
+<h3>Incomes:</h3>
 
 {% for income in income_list %}
-<div class="income">
-    <div class="income-name">
-        {{ income.name }} 
-        <br><small>{{ income.income_date|date:"F j, Y" }}  {{ income.amount }} added by {{ income.author}} on {{income.created_date}}</small>
-    </div>
-    
-    <div class="task-btn">
-        <a class="link-control" href="{% url 'income_update' pk=income.pk %}">edit</a>
-        <a class="link-control" href="{% url 'income_copy' pk=income.pk %}">Copy</a>
-        <a class="link-control" href="{% url 'income_delete' pk=income.pk %}">[X]</a>
-    </div>
-</div>
+<ul class="list-group">
+    <li class="list-group-item">
+        {{ income.name }} {{ income.amount }} RUB
+        <br><small>Received on {{ income.income_date|date:"F j, Y" }}, added by {{ income.author}} on {{income.created_date}}</small>
+        <a href="{% url 'income_delete' pk=income.pk %}" class="btn btn-light float-right"><i class="fas fa-trash"></i></a>
+        <a href="{% url 'income_copy' pk=income.pk %}" class="btn btn-light float-right"><i class="far fa-copy"></i></a>
+        <a href="{% url 'income_update' pk=income.pk %}" class="btn btn-light float-right"><i class="fas fa-pen"></i></a>
+    </li>
+</ul>
 {% endfor %}
+
+{% else %}
+    <p>No incomes</p>
+{% endif %}
 
 {% block pagination %}
     {% if is_paginated %}
-        <div class="pagination">
-            <span class="page-links">
-                {% if page_obj.has_previous %}
-                    <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-                <span class="page-current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-                {% if page_obj.has_next %}
-                    <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
-                {% endif %}
-            </span>
-        </div>
-    {% endif %}
-{% endblock %}
+    <nav class="pagination" aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}" class="page-link">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}" class="page-link">
+                    {{ page_obj.previous_page_number }}
+                </a>
+            </li>
+            {% endif %}
+            <li class="page-item active">
+                <a href="#" class="page-link">
+                    {{ page_obj.number }}
+                </a>
+            </li>
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}" class="page-link">
+                    {{ page_obj.next_page_number }}
+                </a>
+            </li>
+            <li class="page-item">
+                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}" class="page-link">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>    
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}    
 
+{% endblock %}
 
 {% endblock %}

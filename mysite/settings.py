@@ -25,7 +25,7 @@ SECRET_KEY = '1!ro20a!7ez0c&hadg5fxa(auggk1)2q2q5n=de2!nvrryuo!k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'https://goldstorm.herokuapp.com/']
+ALLOWED_HOSTS = ['127.0.0.1', 'https://goldstorm.herokuapp.com/', 'https://gofinance.herokuapp.com/']
 
 
 # Application definition

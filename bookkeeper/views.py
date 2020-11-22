@@ -323,7 +323,7 @@ class SearchResultsView(generic.ListView):
 @login_required
 def expense_test_add(request):
     categories = Category.objects.all()
-    test_date = datetime.date(2019,1,1)
+    test_date = datetime.date(2020,1,1)
     for month in range(1, 11):
         for category in categories:
             for item in range(len(test_data_dict[category.name])):

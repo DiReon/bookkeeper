@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Wallet</title>
+        <title>Expense GO</title>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
@@ -16,53 +16,66 @@
 
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="https://kit.fontawesome.com/bd7028d7c3.js" crossorigin="anonymous"></script>
         <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    
         <link rel="stylesheet" href="{% static 'bookkeeper/styles.css' %}">
     </head>
     <body>
-        
-
-        <div class="page-header">
-            {% if user.is_authenticated %}
-                <p class="top-menu">Привет, {{ user.username }}!<small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
-            {% else %}
-                <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
-            {% endif %}
-        </div>
-                <button class="btn-control"><a class = "link-control" href="/">+ <small>expense</small></a></button>
-                <button class="btn-control"><a class = "link-control" href="{% url 'income_add' %}">+ <small>income</small></a></button>
-                <button class="btn-control"><a class = "link-control" href="{% url 'expense_add_formset' %}">+++</a></button>
-                <button class="btn-control"><a class = "link-control" href="{% url 'category_add' %}">New Cat</a></button>
-                <button class="btn-control"><a class = "link-control" href="{% url 'expense_test_add' %}">+Test+</a></button>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">ExpenseGo</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+          
                 {% load i18n %}
                 {% load l10n %}
                 {% language 'en' %}
-                {% now "Y/m" as current_month %}
-                <button class="btn-control"><a class = "link-control" href="/{{ current_month|unlocalize }}">Monthly</a></button>
-                <button class="btn-control"><a class = "link-control" href="{% url 'expense_list' %}">Expenses</a></button>
-                <button class="btn-control"><a class = "link-control" href="{% url 'category_list' %}">Categories</a></button>
-                <button class="btn-control"><a class = "link-control" href="{% url 'income_list' %}">Incomes</a></button>
-                <button class="btn-control"><a class = "link-control" href="{% url 'expense_delete_all'%}">Удалить все</a></button>
                 {% now "Y/m/d" as today %}
-                <button class="btn-control"><a class = "link-control" href='/{{ today|unlocalize }}'>Daily</a></button>
-                <br><br>
-                <form action="{% url 'search_results' %}" method="GET">
-                    <input name="q" type="text" placeholder="Search...">
-                    <button type="submit">Поиск</button>
-                </form>
-                
-                {% endlanguage %}
-                {% if messages %}
-                    <ul class="message-list">
-                        {% for message in messages%}
-                        <li class="{{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
+                {% now "Y/m" as current_month %}
+                <li class="nav-item">
+                    <a class = "nav-link" href="{% url 'expense_list' %}">Expenses</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link" href="{% url 'income_list' %}">Incomes</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link" href='/{{ today|unlocalize }}'>Daily</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link" href="/{{ current_month|unlocalize }}">Monthly</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link" href="{% url 'category_list' %}">Categories</a>
+                </li>
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'logout' %}" class="nav-link">{{ user.username }} <i class="fas fa-sign-in-alt"></i></a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i></a>
+                    {% endif %}
+                </div>
 
-                    </ul>
-                {% endif %}
 
-                {% block content %}
-                {% endblock %}
+              </ul>
+            <form action="{% url 'search_results' %}" method="GET" class="form-inline my-2 my-lg-0">
+                <input name="q" type="text" placeholder="Search..." class="form-control mr-sm-2" type="search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
+            </div>
+            {% endlanguage %}
+        </nav>    
+                <!-- <button class="btn-control"><a class = "link-control" href="{% url 'expense_delete_all'%}">Удалить все</a></button> -->
+        {% if messages %}
+            <ul class="message-list">
+                {% for message in messages%}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
     </body>
 </html>

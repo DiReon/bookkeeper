@@ -1,23 +1,19 @@
 {% extends 'bookkeeper/base.html' %}
 {% block content %}
+<a class="btn btn-dark m-3" href="{% url 'category_add' %}">New Category</a>
 
 {% if category_list.count > 0  %}
 
-<h1>Список категорий:</h1>
+<h3 class="ml-3">My categories:</h3>
 
 {% for category in category_list %}
-<div class="expense">
-    <div class="expense-name">
+<ul class="list-group">
+    <li class="list-group-item">
         {{category.name}}
-        <br><small>-------------------------</small>
-    </div>
-    
-    <div class="task-btn">
-        <a class="link-control" href="{% url 'category_update' pk=category.pk %}">edit</a>
-        <a class="link-control" href="{% url 'category_delete' pk=category.pk %}">[X]</a>
-    </div>
-
-</div>
+        <a class="btn btn-dark btn-sm float-right ml-3" href="{% url 'category_update' pk=category.pk %}"><i class="fas fa-pen"></i></a>
+        <a class="btn btn-dark btn-sm float-right ml-3" href="{% url 'category_delete' pk=category.pk %}"><i class="fas fa-trash"></i></a>
+    </li>
+</ul>
 {% endfor %}
 
 {% else %}

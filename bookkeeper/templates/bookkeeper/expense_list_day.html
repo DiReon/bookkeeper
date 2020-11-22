@@ -3,69 +3,46 @@
 
 {% if expense_list.count > 0  %}
 
-<h1>Список расходов:</h1>
-
-
-<h1>{{ day }}</h1>
-<h2>{{ cat }}</h2>
+<h3 class="ml-3">Expenses on {{ day }}:</h3>
 
 {% for expense in expense_list %}
-<div class="expense">
-    <div class="expense-name">
-        {{ expense.name }} : {{expense.category}}
-        <br><small>{{ expense.payment_date|date:"F j, Y" }}  {{ expense.amount }}</small>
-    </div>
-    <div class="task-btn">
-        <a class="edit-btn" href="{% url 'expense_update' pk=expense.pk %}">Edit</a>
-        <a class="remove-btn" href="{% url 'expense_delete' pk=expense.pk %}">[X]</a>
-    </div>
-</div>
+
+<ul class="list-group">
+    <li class="list-group-item">
+        {{ expense.name }} {{ expense.amount }} RUB: {{expense.category}} {% if expense.planned %} : PLANNED {% endif %}
+        <a href="{% url 'expense_delete' pk=expense.pk %}" class="btn btn-light float-right"><i class="fas fa-trash"></i></a>
+        <a href="{% url 'expense_copy' pk=expense.pk %}" class="btn btn-light float-right"><i class="far fa-copy"></i></a>
+        <a href="{% url 'expense_update' pk=expense.pk %}" class="btn btn-light float-right"><i class="fas fa-pen"></i></a>
+        <br><small>Paid on {{ expense.payment_date|date:"F j, Y" }}, added by {{ expense.author}} on {{expense.created_date}}</small>
+    </li>
+</ul>
+
 {% endfor %}
 
-
-
-
 {% else %}
-    <p>Нет внесенных расходов</p>
+    <p>No expenses today</p>
 {% endif %}
 
-
-<div class="pagination pull-left">
-    <ul>
+<nav class="pagination" aria-label="Page navigation example">
+    <ul class="pagination">
         {% if previous_day %}
-            <li class="prev">
-                <a href="/{{ previous_day|date:'Y'  }}/{{ previous_day|date:'m' }}/{{ previous_day|date:'j' }}">
-                    &larr; {{ previous_day|date:"j F Y" }}
+            <li class="page-item">
+                <a class = "page-link" href="/{{ previous_day|date:'Y'  }}/{{ previous_day|date:'m' }}/{{ previous_day|date:'j' }}" aria-label="Previous">
+                     <span aria-hidden="true">&laquo;{{ previous_day|date:"j F Y" }}</span>
                 </a>
             </li>
         {% endif %}
+        <li class="page-item active">
+            <a href="#" class="page-link">{{ day }}</a>
+        </li>
         {% if next_day %}
-            <li class="next">
-                <a href="/{{ next_day|date:'Y'  }}/{{ next_day|date:'m' }}/{{ next_day|date:'j' }}">
-                    {{ next_day|date:"j F Y" }} &rarr;</a>
+            <li class="page-item">
+                <a class="page-link" href="/{{ next_day|date:'Y'  }}/{{ next_day|date:'m' }}/{{ next_day|date:'j' }}" aria-label="Next">
+                     <span aria-hidden="true">{{ next_day|date:"j F Y" }}&raquo;</span>
+                </a>
             </li>
         {% endif %}
     </ul>
 </div>
-
-
-{% block pagination %}
-    {% if is_paginated %}
-        <div class="pagination">
-            <span class="page-links">
-                {% if page_obj.has_previous %}
-                    <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-                <span class="page-current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-                {% if page_obj.has_next %}
-                    <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
-                {% endif %}
-            </span>
-        </div>
-    {% endif %}
-{% endblock %}
-
 
 {% endblock %}

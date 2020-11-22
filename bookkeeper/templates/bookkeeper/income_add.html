@@ -6,11 +6,9 @@
 {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
 {{ form.media }}            {# Adds date-picker required JS and CSS #}
 <h2>Add Income:</h2>
-<form action = "" method="POST" class="">{% csrf_token %}
-
-{{form.as_p}}
-
-    <button type="submit">Submit</button>
+<form action = "" method="POST" class="form-group">{% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" class="btn btn-success">Submit</button>
 </form>
 <br>
 
