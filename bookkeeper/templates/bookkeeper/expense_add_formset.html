@@ -6,39 +6,39 @@
 {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
 {{ form.media }}            {# Adds date-picker required JS and CSS #}
 
-<h1>Добавить расходы:</h1>
-<form method="POST" class="">{% csrf_token %}
-{{ formset.management_form }}
-{% for form in formset %}
-<div>
-    <label for="name"></label>    
-    {{form.name}}
-</div>
-<div>
-    <label for="amount"></label>    
-    {{form.amount}}
-</div>
-<div style="max-width: 300px">
-    <label for="payment_date"></label>
-    {{form.payment_date}}    
-</div>
-<div>
-    <label for="category"></label>    
-    {{form.category}}
-</div>
-<div>
-    <label for="category"></label>    
-    {{form.new_cat}}
-</div>
-<div>
-    <label for="comments"></label>    
-    {{form.comments}}
-</div>  
-<div>
-    <label for="planned_monthly">Planned monthly</label>    
-    {{form.planned_monthly}}
-</div>  
-{% endfor %}
+<h3>Add 5 expenses:</h3>
+<form action="" method="POST" class="form-group">{% csrf_token %}
+    {{ formset.management_form }}
+    {% for form in formset %}
+    <div>
+        <label for="name"></label>    
+        {{form.name}}
+    </div>
+    <div>
+        <label for="amount"></label>    
+        {{form.amount}}
+    </div>
+    <div style="max-width: 300px">
+        <label for="payment_date"></label>
+        {{form.payment_date}}    
+    </div>
+    <div>
+        <label for="category"></label>    
+        {{form.category}}
+    </div>
+    <div>
+        <label for="category"></label>    
+        {{form.new_cat}}
+    </div>
+    <div>
+        <label for="comments"></label>    
+        {{form.comments}}
+    </div>  
+    <div>
+        <label for="planned_monthly">Planned monthly</label>    
+        {{form.planned_monthly}}
+    </div>  
+    {% endfor %}
     <button type="submit">Submit</button>
     
 </form>

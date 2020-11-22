@@ -9,11 +9,19 @@
 <a class = "btn btn-light" href="{% url 'expense_test_add' %}">Add demo expenses</a>
 
 <h3>Add expense</h3>
-<a class = "btn btn-outline-success" href="{% url 'expense_add_formset' %}">
+<!-- <a class = "btn btn-outline-success" href="{% url 'expense_add_formset' %}">
     <div><i>click to add 5 sets</i></div>
-</a>
+</a> -->
 
 <form action = "" method="POST" class="form-group">{% csrf_token %}
+    <div>
+        <label for="category"></label>    
+        {{form.category}}
+    </div>
+    <div>
+        <label for="category"></label>    
+        {{form.new_cat}}
+    </div>
     <div>
         <label for="name"></label>    
         {{form.name}}
@@ -25,14 +33,6 @@
     <div style="max-width: 300px">
         <label for="payment_date"></label>
         {{form.payment_date}}    
-    </div>
-    <div>
-        <label for="category"></label>    
-        {{form.category}}
-    </div>
-    <div>
-        <label for="category"></label>    
-        {{form.new_cat}}
     </div>
     <div>
         <label for="comments"></label>    
@@ -53,8 +53,7 @@
 {% for expense in expenses %}
 <div class="expense">
     <div class="expense-name">
-        {{ expense.name }} : {{expense.category}} : {% if expense.planned %} PLANNED {% endif %}
-        <br><small>Paid on {{ expense.payment_date|date:"F j, Y" }}  {{ expense.amount }} added by {{ expense.author}} on {{expense.created_date}}</small>
+        {{ expense.name }} {{ expense.amount }} RUB: {{expense.category}} {% if expense.planned %} PLANNED {% endif %}
     </div>
     
 </div>
@@ -65,8 +64,7 @@
 {% for income in incomes %}
 <div class="income">
     <div class="income-name">
-        {{ income.name }} 
-        <br><small>Received on {{ income.income_date|date:"F j, Y" }}  {{ income.amount }} added by {{ income.author}} on {{income.created_date}}</small>
+        {{ income.name }}  {{ income.amount }} RUB
     </div>
     
 </div>

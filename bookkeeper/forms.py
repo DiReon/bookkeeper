@@ -62,10 +62,11 @@ class IncomeForm(forms.ModelForm):
      
 
 class CategoryForm(forms.ModelForm):
-    name = forms.CharField(label="Категория",
+    name = forms.CharField(label="New Category",
                     max_length=200,
                     widget=forms.TextInput(attrs={
                         'placeholder': 'Enter category',
+                        'class': 'form-control',
                     }))
     class Meta:
         model = Category
