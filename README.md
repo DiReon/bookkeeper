@@ -4,9 +4,9 @@ Training project: budget tracking tool.
 
 ## Demoversion
 
-https://profit-go.herokuapp.com/
-Login:Guest
-Password: IlovePython
+https://profit-go.herokuapp.com/<br>
+Login:Guest<br>
+Password: IlovePython<br>
 
 ## Features
 
