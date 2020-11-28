@@ -19,6 +19,6 @@ Password: IlovePython<br>
 - [Django](https://www.djangoproject.com/)
 - [Heroku](https://www.heroku.com/home)
 
-## Мотивация
+## Motivation
 
-Created as a training project to practice python/django
+Created as a training project to practice Python/Django
